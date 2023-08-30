@@ -33,6 +33,8 @@ const addFoodToDiary = async (req, res) => {
             userId: userId,
             diaryDays: oldDiary.concat({ date: currentDate, meals: diaryUserByCurrentDate[0].meals.concat(currentFood) })
           }
+          console.log(newDiary);
+
           try {
             await Diary.updateOne(
               { userId: userId },
@@ -53,12 +55,14 @@ const addFoodToDiary = async (req, res) => {
             userId: userId,
             diaryDays: diary.diaryDays.concat({ date: currentDate, meals: [currentFood] })
           }
+          console.log("newDiary", newDiary);
           try {
             await Diary.updateOne(
               { userId: userId },
               newDiary
             )
             res.status(200);
+            console.log(newDiary, "add Diary For Current User");
             res.send({ data: newDiary, message: "add Diary For Current User" });
           }
           catch (err) {
@@ -90,6 +94,7 @@ async function getDiaryByUser(req, res) {
     return res.status(400).send(err.message)
   }
 }
+
 
 function updateTask(req, res) {
   let { newTask } = req.body;

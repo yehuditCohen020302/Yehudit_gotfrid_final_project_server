@@ -63,9 +63,27 @@ const sendMessage = async (req, res) => {
   }
 }
 
-function updateUser(req, res) {
-  res.send("user updated!!")
+async function updateUser(req, res) {
+  const updateUser = req.body;
+  try {
+    await User.updateOne(
+      { userId: updateUser?.userId },
+      updateUser
+    )
+    res.status(200);
+    res.send({ data: updateUser, message: "update User" });
+  }
+  catch (err) {
+    console.log(err.message)
+    return res.status(400).send(err.message)
+  }
 }
+const getUserById = async (req, res) => {
+  await User.findOne({ _id: req.params.userId })
+    .then((user) => {
+      res.status(200).json({ data: user })
+    })
+    .catch(err => res.status(404).send('not found user'))
 
-
-module.exports = { login, createUser, getAllUsers, deleteUser, updateUser, sendMessage }
+}
+module.exports = { login, createUser, getAllUsers, deleteUser, updateUser, sendMessage, getUserById }
